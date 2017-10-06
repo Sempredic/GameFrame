@@ -215,14 +215,19 @@ public class ExcelFrame extends javax.swing.JFrame {
     private void devFieldNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_devFieldNameKeyPressed
         // TODO add your handling code here:
         int keyCode = evt.getKeyCode();
-        if(keyCode == KeyEvent.VK_ENTER && !multiSelected){
-            System.out.println("To Table");
-            toTable();
-        }else if(keyCode == KeyEvent.VK_ENTER && multiSelected){
-            System.out.println("To Multi");
-            toMulti();
-        }
         
+        if(keyCode == KeyEvent.VK_ENTER && !multiSelected){
+            toTable();
+            manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            manager.focusPreviousComponent();
+            techFieldName.setText("");
+        }else if(keyCode == KeyEvent.VK_ENTER && multiSelected){
+            if(!devFieldName.getText().equals("")){
+                toMulti();
+            }else{
+                commitMTable();
+            }  
+        }   
     }//GEN-LAST:event_devFieldNameKeyPressed
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
@@ -252,9 +257,7 @@ public class ExcelFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_devFieldNameFocusGained
     
     private void toMulti(){
-       
-        
-        
+
         String device = devFieldName.getText();
         devFieldName.setText("");
         
@@ -263,12 +266,30 @@ public class ExcelFrame extends javax.swing.JFrame {
         }else{
             int currentVal = multiMap.get(device);
             multiMap.replace(device, currentVal+1);
+        }  
+    }
+    
+    private void commitMTable(){
+        
+        if(!multiMap.isEmpty()){
+            int row = getRow(tableModel,techFieldName.getText());
+            
+            for(Map.Entry<String,Integer> entry:multiMap.entrySet()){
+                
+                String device = entry.getKey();
+                
+                int value = entry.getValue();                
+                int col = getCol(tableModel,device);
+
+                int oldValue = Integer.parseInt(tableModel.getValueAt(row, col).toString());
+                int newValue = oldValue + value;
+                
+                setTableValues(newValue,row,col);
+            }
         }
         
-        for(Map.Entry<String,Integer> entry:multiMap.entrySet()){
-            System.out.println(entry.getKey() + " " + entry.getValue());
-        }
-       
+        multiMap.clear();
+                
     }
     
     private void toTable(){
@@ -284,9 +305,13 @@ public class ExcelFrame extends javax.swing.JFrame {
         int oldValue = Integer.parseInt(tableModel.getValueAt(row, col).toString());
         int newValue = oldValue + DEFAULT_INC;
            
-        tableModel.setValueAt(newValue, row, col);
-            
-            
+        setTableValues(newValue,row,col);    
+        
+    }
+    
+    private void setTableValues(int val, int row, int col){
+        
+        tableModel.setValueAt(val, row, col);    
         updateTotalDev(tableModel);
         updateTotalTech(tableModel);
     }
