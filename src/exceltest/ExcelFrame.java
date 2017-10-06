@@ -41,6 +41,7 @@ public class ExcelFrame extends javax.swing.JFrame {
         initComponents();
         tableModel = (DefaultTableModel)theTable.getModel();
         multiMap = new HashMap<String,Integer>();
+        
     }
     
     DefaultTableModel getModel(){
@@ -115,6 +116,14 @@ public class ExcelFrame extends javax.swing.JFrame {
         theTable.setColumnSelectionAllowed(true);
         tablePanel.setViewportView(theTable);
         theTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (theTable.getColumnModel().getColumnCount() > 0) {
+            theTable.getColumnModel().getColumn(0).setHeaderValue("Tech");
+            theTable.getColumnModel().getColumn(1).setHeaderValue("Dev1");
+            theTable.getColumnModel().getColumn(2).setHeaderValue("Dev2");
+            theTable.getColumnModel().getColumn(3).setHeaderValue("Dev3");
+            theTable.getColumnModel().getColumn(4).setHeaderValue("Dev4");
+            theTable.getColumnModel().getColumn(5).setHeaderValue("Tech Total");
+        }
 
         button1.setText("jButton1");
         button1.addActionListener(new java.awt.event.ActionListener() {
@@ -299,8 +308,6 @@ public class ExcelFrame extends javax.swing.JFrame {
         
         int col = getCol(tableModel,device);
         int row = getRow(tableModel,techFieldName.getText());
-        
-        devFieldName.setText("");
             
         int oldValue = Integer.parseInt(tableModel.getValueAt(row, col).toString());
         int newValue = oldValue + DEFAULT_INC;
