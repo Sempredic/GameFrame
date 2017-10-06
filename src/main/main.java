@@ -21,9 +21,11 @@ public class main {
         
         rosterList.put("2277", "A");
         rosterList.put("2273", "B");
+        rosterList.put("0025", "C");
         rosterList.put("1234", "C");
+        rosterList.put("0000", "C");
         
-        
+ 
         
         TableManager tManager = new TableManager(rosterList);
         //add hour table with pre chosen roster
